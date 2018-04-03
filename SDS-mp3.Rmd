@@ -1,0 +1,12 @@
+---
+title: "SDS-mp3"
+author: "Aoi Ogawa"
+date: "4/3/2018"
+output: html_document
+---
+
+```{r}
+library(macleish)
+```
+
+We are doing #5. 
