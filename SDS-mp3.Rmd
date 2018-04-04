@@ -7,6 +7,14 @@ output: html_document
 
 ```{r}
 library(macleish)
+
 ```
 
 We are doing #5. 
+
+```{r}
+whately <- macleish %>%
+tbl("whately")
+
+```
+
