@@ -14,8 +14,12 @@ library(sf)
 We are doing #5. 
 
 ```{r}
-whately <- macleish %>%
-tbl("whately")
+whately_2015
 
+maple_sap 
 ```
+
+
+
+
 
