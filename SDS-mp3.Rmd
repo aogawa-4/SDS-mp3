@@ -15,6 +15,7 @@ We are doing #5.
 
 ```{r}
 macleish <- etl("macleish")
+
 str(macleish)
 macleish %>%
 etl_extract() %>%
@@ -24,10 +25,10 @@ etl_load()
 whately <- macleish %>%
 tbl("whately")
 
+weather <- data.frame(whately)
 
-weather  <- whately
 
-maple_sap 
+maple_sap <- data.frame(maple_sap)
 ```
 
 
