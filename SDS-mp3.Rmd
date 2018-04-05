@@ -1,6 +1,6 @@
 ---
 title: "SDS-mp3"
-author: "Aoi Ogawa"
+author: "Aoi Ogawa, Stella Li, Ester Zhao"
 date: "4/3/2018"
 output: html_document
 ---
@@ -14,7 +14,15 @@ library(sf)
 We are doing #5. 
 
 ```{r}
-whately_2015
+macleish <- etl("macleish")
+str(macleish)
+
+whately <- macleish %>%
+tbl("whately")
+
+whately %>%
+collect() %>%
+tail()
 
 maple_sap 
 ```
