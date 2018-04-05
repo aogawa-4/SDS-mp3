@@ -16,13 +16,16 @@ We are doing #5.
 ```{r}
 macleish <- etl("macleish")
 str(macleish)
+macleish %>%
+etl_extract() %>%
+etl_transform() %>%
+etl_load()
 
 whately <- macleish %>%
 tbl("whately")
 
-whately %>%
-collect() %>%
-tail()
+
+weather  <- whately
 
 maple_sap 
 ```
