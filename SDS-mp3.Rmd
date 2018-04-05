@@ -27,11 +27,16 @@ tbl("whately")
 
 weather <- data.frame(whately)
 
+weather_time <- data.frame(whately)
+
 
 maple_sap <- data.frame(maple_sap)
 ```
 
 
 
+```{r}
+weather$when <- format(as.Date(weather$when), "%d / %m /%Y")
+```
 
 
