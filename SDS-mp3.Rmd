@@ -13,7 +13,10 @@ library(sf)
 
 We are doing #5. 
 
+
 ```{r}
+# getting the table of maple syrup data and weather data
+
 macleish <- etl("macleish")
 
 str(macleish)
@@ -33,10 +36,39 @@ weather_time <- data.frame(whately)
 maple_sap <- data.frame(maple_sap)
 ```
 
-
-
 ```{r}
+# Change the when column fron date/month/year/time into date/month/year
+
 weather$when <- format(as.Date(weather$when), "%d / %m /%Y")
 ```
 
+= => , 
+seperate when by the , 
+
+```{r}
+# making the maple syrup density graph
+
+sap <- maple_sap %>% 
+  filter(!is.na(sap))
+
+when_2013 <- sap %>%
+  filter(substr(`2013`, when))
+
+when_2014 <- sap %>%
+  filter(substr("2014", when))
+
+when_2015 <- sap %>%
+  filter(substr("2015", when))
+
+when_2017 <- sap %>%
+  filter(substr("2017", when))
+
+ggplot(sap, aes(x = when, y = sap)) +
+  geom_point()
+
+
+  # geom_area(fill = "darkgoldenrod1") + 
+  # geom_line()
+
+```
 
