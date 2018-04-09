@@ -9,8 +9,9 @@ output: html_document
 
 library(tidyverse)
 library(sf)
+library(macleish)
+library(leaflet)
 
-macleish
 ```
 
 
@@ -37,6 +38,22 @@ weather_time <- data.frame(whately)
 
 
 maple_sap <- data.frame(maple_sap)
+
+```
+
+
+```{r}
+# mappping the maple trees (including birch trees)
+maple_forest <- macleish_layers[["forests"]] %>% 
+  filter(VegType_21 == "3")
+birch_maple_forest <- macleish_layers[["forests"]] %>% 
+  filter(VegType_21 == "13" )
+
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(data = maple_forest, color = "red") %>%
+  addPolygons(data = birch_maple_forest, color = "yellow")
 ```
 
 ```{r}
