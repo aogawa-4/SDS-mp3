@@ -116,12 +116,42 @@ maple_sap <- data.frame(maple_sap)
 }
 
 
-ggplot(sap, aes(x = when, y = sap)) +
-  geom_point()
+# ggplot(sap, aes(x = when, y = sap)) +
+#   geom_point()
 
 
   # geom_area(fill = "darkgoldenrod1") + 
   # geom_line()
 
+```
+
+
+
+
+
+
+```{r}
+f_weather$wind_speed <- NULL
+f_weather$wind_dir <- NULL
+f_weather$rel_humidity <- NULL
+f_weather$pressure <- NULL
+f_weather$solar_radiation <- NULL
+f_weather$rainfall <- NULL
+
+sap_weather <- inner_join(f_weather, sap) 
+
+sap_weather$Comments <- NULL
+
+sap_weather <- group_by(year, month, day, < time) %>%
+  
+
+
+
+```
+
+
+```{r}
+ggplot(sap_weather, aes(x = time, y = sap)) + 
+  geom_point()
 ```
 
