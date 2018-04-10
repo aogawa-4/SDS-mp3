@@ -24,6 +24,7 @@ We are doing #5.
 macleish <- etl("macleish")
 
 str(macleish)
+
 macleish %>%
 etl_extract() %>%
 etl_transform() %>%
@@ -36,7 +37,6 @@ weather <- data.frame(whately)
 
 weather_time <- data.frame(whately)
 
-
 maple_sap <- data.frame(maple_sap)
 
 ```
@@ -46,6 +46,7 @@ maple_sap <- data.frame(maple_sap)
 # mappping the maple trees (including birch trees)
 maple_forest <- macleish_layers[["forests"]] %>% 
   filter(VegType_21 == "3")
+
 birch_maple_forest <- macleish_layers[["forests"]] %>% 
   filter(VegType_21 == "13" )
 
@@ -75,19 +76,6 @@ f_weather <- weather_time %>%
   separate(when,c("year", "month", "day"), sep = "-") %>%
   separate(day, c("day", "time"), sep = "T")
 
-sap_2013 <- sap %>%
-  filter(year == "2013")
-
-sap_2014 <- sap %>%
-  filter(year == "2014")
-
-sap_2015 <- sap %>%
-  filter(year == "2015")
-
-when_2017 <- sap %>%
-  filter(year == "2017")
-
-sap_years <- c(sap_2013, sap_2014, sap_2015, when_2017)
 ```
 
 
@@ -143,9 +131,6 @@ sap_weather <- inner_join(f_weather, sap)
 sap_weather$Comments <- NULL
 
 sap_weather <- group_by(year, month, day, < time) %>%
-  
-
-
 
 ```
 
@@ -155,3 +140,25 @@ ggplot(sap_weather, aes(x = time, y = sap)) +
   geom_point()
 ```
 
+```{r}
+daytime_sap_data <- sap_weather %>%
+  group_by(year,month,day) %>%
+  filter(time >= "06:00:00Z" &
+           time <="18:00:00Z") %>% 
+  summarize(day_avg_temp = mean(temperature))
+
+
+nighttime_sap_data <- sap_weather %>%
+    group_by(year,month,day) %>%
+  filter(time >= "00:00:00Z" &
+           time < "06:00:00Z" |
+           time > "18:00:00Z" &
+           time < "24:00:00Z") %>%
+  summarize(night_avg_temp = mean(temperature))
+  
+final_sap <- inner_join(daytime_sap_data, nighttime_sap_data)
+
+View(daytime_sap_data)
+
+nighttime_sap_data
+```
