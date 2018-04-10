@@ -2,10 +2,12 @@
 title: "SDS-mp3"
 author: "Aoi Ogawa, Stella Li, Ester Zhao"
 date: "4/3/2018"
-output: html_document
+output: 
+  html_document :
+    code_folding : hide
 ---
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 
 library(tidyverse)
 library(sf)
@@ -14,12 +16,13 @@ library(leaflet)
 
 ```
 
+<br>
 
-We are doing #5. 
 
 
-```{r}
-# getting the table of maple syrup data and weather data
+
+```{r, message = FALSE, warning = FALSE}
+# getting the table of maple syrup data and weather data from macleish
 
 macleish <- etl("macleish")
 
@@ -42,8 +45,8 @@ maple_sap <- data.frame(maple_sap)
 ```
 
 
-```{r}
-# mappping the maple trees (including birch trees)
+```{r, message = FALSE, warning = FALSE}
+# Mappping the maple tree forests using leaflet
 maple_forest <- macleish_layers[["forests"]] %>% 
   filter(VegType_21 == "3")
 
@@ -57,16 +60,10 @@ leaflet() %>%
   addPolygons(data = birch_maple_forest, color = "yellow")
 ```
 
-```{r}
-# # Change the when column fron date/month/year/time into date/month/year
-# 
-# weather$when <- format(as.Date(weather$when), "%d / %m /%Y")
-```
 
-
-
-```{r}
-# making the maple syrup density graph
+```{r, message = FALSE, warning = FALSE}
+#Separating the date into year, month, and day for clarity
+#Filter out NA data for sap
 
 sap <- maple_sap %>% 
   filter(!is.na(sap)) %>%
@@ -79,46 +76,10 @@ f_weather <- weather_time %>%
 ```
 
 
-```{r}
-macleish_data_wrangle <- function(){
 
-library(macleish)
+```{r, message = FALSE, warning = FALSE}
+#Filter out irrelevant data (only temp and sap is needed)
 
-macleish <- etl("macleish")
-
-str(macleish)
-macleish %>%
-etl_extract() %>%
-etl_transform() %>%
-etl_load()
-
-whately <- macleish %>%
-tbl("whately")
-
-weather <- data.frame(whately)
-
-weather_time <- data.frame(whately)
-
-maple_sap <- data.frame(maple_sap)
-
-}
-
-
-# ggplot(sap, aes(x = when, y = sap)) +
-#   geom_point()
-
-
-  # geom_area(fill = "darkgoldenrod1") + 
-  # geom_line()
-
-```
-
-
-
-
-
-
-```{r}
 f_weather$wind_speed <- NULL
 f_weather$wind_dir <- NULL
 f_weather$rel_humidity <- NULL
@@ -133,7 +94,9 @@ sap_weather$Comments <- NULL
 ```
 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
+#Get the average daytime and nighttime temperatures for each day
+
 daytime_sap_data <- sap_weather %>%
   group_by(year,month,day) %>%
   filter(time >= "06:00:00Z" &
@@ -149,8 +112,17 @@ nighttime_sap_data <- sap_weather %>%
            time < "24:00:00Z") %>%
   summarize(night_avg_temp = mean(temperature))
   
-final_sap <- inner_join(daytime_sap_data, nighttime_sap_data)
+#Join daytime and nighttime average temperatures into one data frame
+#Calculate the difference between daytime and nighttime average temperatures for each day
 
+final_sap <- inner_join(daytime_sap_data, nighttime_sap_data) %>%
+  mutate(temp_diff = day_avg_temp - night_avg_temp)
 
+# Join the year, month, and day columns back into one date column
+  
+  
+  
+#Plot the sap yield and the difference in temperature over time
+#ggplot(final_sap, aes (x = day, y = ))
 
 ```
