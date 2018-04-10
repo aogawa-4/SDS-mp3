@@ -118,11 +118,31 @@ nighttime_sap_data <- sap_weather %>%
 final_sap <- inner_join(daytime_sap_data, nighttime_sap_data) %>%
   mutate(temp_diff = day_avg_temp - night_avg_temp)
 
+final_sap <-inner_join(final_sap, sap)
+
+
 # Join the year, month, and day columns back into one date column
   
-  
+final_sap$date <- paste0(final_sap$year, final_sap$month, final_sap$day)
+final_sap$date <- ymd(final_sap$date)
+
+final_sap$day <- NULL
+final_sap$year <- NULL 
+final_sap$month <- NULL 
+final_sap$Comments <- NULL
+
+
+final_sap <- final_sap[c("date", "day_avg_temp", "night_avg_temp", "temp_diff", "sap", "People")]
   
 #Plot the sap yield and the difference in temperature over time
-#ggplot(final_sap, aes (x = day, y = ))
+ggplot(final_sap, aes (x = date))+ 
+  geom_line(aes(y = temp_diff), colour = "blue") +
+  geom_line(aes(y = sap), colour = "orange") +
+  labs(x = "Date", y = "Difference in Tempreture") +
+  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) 
+  
+  
+    
+         
 
 ```
