@@ -130,15 +130,8 @@ sap_weather <- inner_join(f_weather, sap)
 
 sap_weather$Comments <- NULL
 
-sap_weather <- group_by(year, month, day, < time) %>%
-
 ```
 
-
-```{r}
-ggplot(sap_weather, aes(x = time, y = sap)) + 
-  geom_point()
-```
 
 ```{r}
 daytime_sap_data <- sap_weather %>%
@@ -158,7 +151,6 @@ nighttime_sap_data <- sap_weather %>%
   
 final_sap <- inner_join(daytime_sap_data, nighttime_sap_data)
 
-View(daytime_sap_data)
 
-nighttime_sap_data
+
 ```
