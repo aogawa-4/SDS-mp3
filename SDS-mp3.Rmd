@@ -143,24 +143,48 @@ final_sap <-inner_join(final_sap, sap)
 final_sap$date <- paste0(final_sap$year, final_sap$month, final_sap$day)
 final_sap$date <- ymd(final_sap$date)
 
+
 final_sap$day <- NULL
-final_sap$year <- NULL 
+# final_sap$year <- NULL 
 final_sap$month <- NULL 
 final_sap$Comments <- NULL
 
 
-final_sap <- final_sap[c("date", "day_avg_temp", "night_avg_temp", "temp_diff", "sap", "People")]
-  
+final_sap <- final_sap[c("year", "date", "day_avg_temp", "night_avg_temp", "temp_diff", "sap", "People")]
+ 
+years_sap <- c("2013", "2014", "2015", "2017")
+
+#Plot the sap yield and the difference in temperature over time
+data_sap <- function(year_arg) {
+  final_sap %>%
+    filter(year == year_arg) %>%
+    ggplot(final_sap, aes(x = date)) +
+  geom_line(aes(y = temp_diff), colour = "blue") +
+  geom_line(aes(y = sap), colour = "orange") +
+  labs(x = "Date", y = "Difference in Temperature") +
+  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield"))
+}
+
+sqp_plots <- lapply(years, data_sap)
+
+
+```
+
+```{r}
 #Plot the sap yield and the difference in temperature over time
 ggplot(final_sap, aes (x = date))+ 
   geom_line(aes(y = temp_diff), colour = "blue") +
   geom_line(aes(y = sap), colour = "orange") +
   labs(x = "Date", y = "Difference in Temperature") +
-  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) 
-  
-  
+  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) + facet_wrap(~ year)
+
 
 ```
 
 
+```{r}
+# reading shapefile
+
+sigar_bush <- st_read("./SugarbushPoly20171013.shp")
+```
 
