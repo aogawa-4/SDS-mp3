@@ -155,7 +155,7 @@ final_sap <- final_sap[c("date", "day_avg_temp", "night_avg_temp", "temp_diff", 
 ggplot(final_sap, aes (x = date))+ 
   geom_line(aes(y = temp_diff), colour = "blue") +
   geom_line(aes(y = sap), colour = "orange") +
-  labs(x = "Date", y = "Difference in Tempreture") +
+  labs(x = "Date", y = "Difference in Temperature") +
   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) 
   
   
