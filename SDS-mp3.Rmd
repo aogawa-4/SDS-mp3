@@ -21,15 +21,17 @@ library(rgdal)
 aka Pour Some Sugar On Me by Def Leppard
 <br>
 
-Maple syrup: New England runs on it. Anyone with a maple in their backyard knows that Autumn is the time to put a tap on the tree. But what circumstances generate the most maple sap? We talked to Reid Bertone-Johnson at the Macleish field station to get the down-low. 
+Maple syrup: New England runs on it. Anyone with a maple in their backyard knows that winter is the time to put a tap on the tree. But what circumstances generate the most maple sap? We talked to Reid Bertone-Johnson at the Macleish field station, to ask him about his experiences sugaring at Macleish. 
 
-[Insert info from Reid interview on when the most sap is collected]
+Reid Bertone-Johnson has been sugaring at Macleish since 2013, when Smith College opened up the South Sugarbush location for sugaring in order to expose Smith students to the process of collecting maple syrup. When asked what conditions give the greatest sap yield, Bertone-Johnson replied that “we know tomorrow will be a good run when the temperature projection for the day is high”. He stated that his gut feeling is that the best yields came from a combination of below freezing temperatures at night, and temperatures in the mid-forties and fifties during the day. These conditions usually occur between mid-February and mid-April.
 
-### Mapping out Macleish
+When further asked about his experiences sugaring at Macleish, Bertone-Johnson went into detail on the labor intensive nature of collecting sap. Each morning, he and a group students travel to the tapped trees with a van. They remove the 5-gallon buckets from the tapped trees, and lug them back to the tank in the van. These buckets sometimes weigh up to forty pounds, and the whole process takes a couple hours at best. While sap collection at Smith was created to expose students to the sugaring process, the collection is exhausting.
 
-Macleish at Smith College taps their maple trees each year, and we are interested in making the process more time efficient and effective. In order to do this, we are used spatial data from the `macleish` shapefile, which contains information about the man-made and natural structures surrounding the Macleish field station. From this, we used the weather, forest, and sap layers to analyze how climate affects sap yield at Macleish. Our goal is to allow those working at the Macleish field station to predict when the greatest sap yields will be, thus allowing them to prepare for the sap collection with the appropriate materials. We hope to also create a route that will allow for the most efficient sap collection.
+### A Proposal for Change
 
-Below, we have mapped out the Macleish area with the maple forests highlighted in red, and forests that contain maples highlighted in yellow. Our suggested route allows a worker to travel to all the maple trees in the area surrounding the Macleish field station in the most efficient way.
+Smith College taps the southern Sugarbush location each year, using a process that involves hard manual labor and is very time consuming. Bertone-Johnson mentioned that many other sugaring locations use lines to feed their sap back to their tank location using gravity. We considered mapping out the Macleish sugarbush locations using elevation data to highlight the possibility of using lines to gravity feed sap back from the northern Sugarbush location to the bunker located adjacent to the southern Sugarbush location. In order to do this, we used spatial data from the `macleish` shapefile, which contains information about the man-made and natural structures surrounding the Macleish field station, in addition to data from the `sugarbush` shapefile, which outlines the Sugarbush locations at Macleish. 
+
+Below, we have mapped out the Macleish area with the maple forests highlighted in red, and forests that contain maples highlighted in yellow. We have also mapped out the Sugarbush locations with elevation markings.
 
 
 ```{r, message = FALSE, warning = FALSE}
@@ -71,12 +73,14 @@ leaflet() %>%
   addPolygons(data = birch_maple_forest, color = "yellow")
 ```
 
-Using this route, we hope that workers will be able to visit a larger amount of maple trees per day. The Macleish data showed that several days, maple sap was not collected. Our route will make collection less of a hassle, and possibly open up Macleish maple sap collection as a tourist destination the way that many New England maple forests are.
+As can be observed above, the north Sugarbush location is at a higher elevation than the location of the southern Sugarbush bunker. This means that a system of lines using gravity to transport the sap to the bunker would be possible to plan, using slope and elevation to calculate a possible route. To implement this plan, Smith would have to invest in piping or lines to connect the two locations, which would be inexpensive and save the people sugaring at Macleish time and energy. Plastic lines for maple sugaring can be found online for under one dollar per foot. There should not be a major environmental impact, as the lines would not be interacting with the forest, and could be taken down when sugaring season was completed. While setting up the lines system would take a significant amount of time, it would reduce the time needed in the future to transfer the collected sap to the tank at the bunker. The only roadblocks foreseeable are the difficulty of computations necessary to create a system of lines that function using exclusively gravity as a transfer method.
 
 <br>
 
 ### Sap Yield Predictions
-We also aimed to compare the difference in daytime temperature and nighttime temperature with the total sap collected on each day. (INSERT REID’S PREDICTION ON SAP COLLECTION). The graph below shows these compared over the years that maple sap data is provided - this shows that when (INSERT CONCLUSION BASED ON GRAPH). We hope that this data graphic provides some clarity on what conditions tend to yield the most sap.
+
+
+We also aimed to compare the difference in daytime temperature and nighttime temperature with the total sap collected on each day. According to Bertone-Johnson, an extreme difference between day and night temperature is the ideal condition to collect a high yield. The graph below shows a comparison between the difference in daytime and nighttime temperatures and sap yield for each day. The graphs have been faceted to create a graph for each year. This data supports Bertone-Johnson’s hypothesis that a greater yield comes from a higher temperature difference between day and night. By using weather predictions for the week, workers at Macleish would be able to predict the volume of the yield based on these graphs, and prepare for the week as necessary with materials and workers.
 
 ```{r, message = FALSE, warning = FALSE}
 #Separating the date into year, month, and day for clarity
