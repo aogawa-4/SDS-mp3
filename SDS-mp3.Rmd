@@ -17,7 +17,20 @@ library(rgdal)
 
 ```
 
+#Sugar Rush 
+aka Pour Some Sugar On Me by Def Leppard
 <br>
+
+Maple syrup: New England runs on it. Anyone with a maple in their backyard knows that Autumn is the time to put a tap on the tree. But what circumstances generate the most maple sap? We talked to Reid Bertone-Johnson at the Macleish field station to get the down-low. 
+
+[Insert info from Reid interview on when the most sap is collected]
+
+### Mapping out Macleish
+
+Macleish at Smith College taps their maple trees each year, and we are interested in making the process more time efficient and effective. In order to do this, we are used spatial data from the `macleish` shapefile, which contains information about the man-made and natural structures surrounding the Macleish field station. From this, we used the weather, forest, and sap layers to analyze how climate affects sap yield at Macleish. Our goal is to allow those working at the Macleish field station to predict when the greatest sap yields will be, thus allowing them to prepare for the sap collection with the appropriate materials. We hope to also create a route that will allow for the most efficient sap collection.
+
+Below, we have mapped out the Macleish area with the maple forests highlighted in red, and forests that contain maples highlighted in yellow. Our suggested route allows a worker to travel to all the maple trees in the area surrounding the Macleish field station in the most efficient way.
+
 
 ```{r, message = FALSE, warning = FALSE}
 # getting the table of maple syrup data and weather data from macleish
@@ -58,6 +71,12 @@ leaflet() %>%
   addPolygons(data = birch_maple_forest, color = "yellow")
 ```
 
+Using this route, we hope that workers will be able to visit a larger amount of maple trees per day. The Macleish data showed that several days, maple sap was not collected. Our route will make collection less of a hassle, and possibly open up Macleish maple sap collection as a tourist destination the way that many New England maple forests are.
+
+<br>
+
+### Sap Yield Predictions
+We also aimed to compare the difference in daytime temperature and nighttime temperature with the total sap collected on each day. (INSERT REID’S PREDICTION ON SAP COLLECTION). The graph below shows these compared over the years that maple sap data is provided - this shows that when (INSERT CONCLUSION BASED ON GRAPH). We hope that this data graphic provides some clarity on what conditions tend to yield the most sap.
 
 ```{r, message = FALSE, warning = FALSE}
 #Separating the date into year, month, and day for clarity
