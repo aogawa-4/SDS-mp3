@@ -13,13 +13,11 @@ library(tidyverse)
 library(sf)
 library(macleish)
 library(leaflet)
+library(rgdal)
 
 ```
 
 <br>
-
-
-
 
 ```{r, message = FALSE, warning = FALSE}
 # getting the table of maple syrup data and weather data from macleish
@@ -142,7 +140,8 @@ ggplot(final_sap, aes (x = date))+
   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) 
   
   
-    
-         
 
 ```
+
+
+
