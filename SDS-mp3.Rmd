@@ -14,7 +14,9 @@ library(sf)
 library(macleish)
 library(leaflet)
 library(rgdal)
-
+library(lubridate)
+library(ggmap)
+library(RgoogleMaps)
 ```
 
 #Sugar Rush 
@@ -70,8 +72,12 @@ birch_maple_forest <- macleish_layers[["forests"]] %>%
 leaflet() %>%
   addTiles() %>%
   addPolygons(data = maple_forest, color = "red") %>%
-  addPolygons(data = birch_maple_forest, color = "yellow")
+  addPolygons(data = birch_maple_forest, color = "yellow") %>%
+  addPolygons(data = macleish_layers[["trails"]], 
+              weight = 2, color = "blue", fillColor = "transparent")
 ```
+
+
 
 As can be observed above, the north Sugarbush location is at a higher elevation than the location of the southern Sugarbush bunker. This means that a system of lines using gravity to transport the sap to the bunker would be possible to plan, using slope and elevation to calculate a possible route. To implement this plan, Smith would have to invest in piping or lines to connect the two locations, which would be inexpensive and save the people sugaring at Macleish time and energy. Plastic lines for maple sugaring can be found online for under one dollar per foot. There should not be a major environmental impact, as the lines would not be interacting with the forest, and could be taken down when sugaring season was completed. While setting up the lines system would take a significant amount of time, it would reduce the time needed in the future to transfer the collected sap to the tank at the bunker. The only roadblocks foreseeable are the difficulty of computations necessary to create a system of lines that function using exclusively gravity as a transfer method.
 
@@ -162,17 +168,21 @@ years_sap <- c("2013", "2014", "2015", "2017")
 data_sap <- function(year_arg) {
   final_sap %>%
     filter(year == year_arg) %>%
-    ggplot(final_sap, aes(x = date)) +
+    ggplot(aes(x = date)) +
   geom_line(aes(y = temp_diff), colour = "blue") +
   geom_line(aes(y = sap), colour = "orange") +
   labs(x = "Date", y = "Difference in Temperature") +
   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield"))
 }
 
-sqp_plots <- lapply(years, data_sap)
+sap_graphs <- lapply(years_sap, data_sap)
 
-
+# how to plot the data?
+sap_graphs
 ```
+
+gather =. split by variables 
+
 
 ```{r}
 #Plot the sap yield and the difference in temperature over time
@@ -185,10 +195,52 @@ ggplot(final_sap, aes (x = date))+
 
 ```
 
+```{r}
+#driving route from smith to macleish
+# smith <- "Smith College, Northampton, MA 01063"
+# geocode(smith)
+# 
+# Macleish <- "30, 78 Poplar Hill Rd, South Deerfield, MA 01373"
+# geocode(Macleish)
+# 
+# mapdist(from = smith, to = Macleish, mode = "driving")
+# 
+# smith_to_macleish <- route(smith, Macleish, alternatives = TRUE)
+# head(smith_to_macleish) %>%
+#   select(m, km, miles, miles, seconds, minutes, hours, startLon, startLat)
+# 
+# drive_df <- route(from = "Smith College, Northampton, MA 01063",
+#                  to = "30, 78 Poplar Hill Rd, South Deerfield, MA 01373",
+#                  alternatives = TRUE, structure = "legs")
+# 
+# qmap("Smith College, Northampton, MA 01063", 
+#      zoom = 12, maptype = 'roadmap') + 
+#   geom_leg(aes(x = startLon, y = startLat, xend = endLon, yend = endLat, color = route), alpha = 0.7, size = 2, data = drive_df)
+```
+
+
 
 ```{r}
 # reading shapefile
+sugar_bush <- st_read("sugar_bush/SugarbushPoly20171013.shp") %>%
+   st_transform(4326)
 
-sigar_bush <- st_read("./SugarbushPoly20171013.shp")
+sugar_bush_inside <- macleish_layers[["boundary"]] %>%
+  st_intersection(sugar_bush)
+
+elevation <- st_read("contours250k/CONTOURS250K_ARC.shp")%>%
+   st_transform(4326)
+
+elevation_inside <- macleish_layers[["boundary"]] %>%
+  st_intersection(elevation)
+
+# Mapping the sugar bushes
+leaflet() %>%
+  addTiles() %>%
+  addPolylines(data = elevation_inside,  weight = 1, color = "blue") %>%
+  addPolygons(data = sugar_bush_inside,  weight = 1, color ="red") %>%
+  addPolygons(data = macleish_layers[["trails"]], 
+              weight = 2, color = "yellow", fillColor = "transparent")
+  
 ```
 
