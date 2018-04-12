@@ -184,7 +184,7 @@ sap_graphs
 gather =. split by variables 
 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 #Plot the sap yield and the difference in temperature over time
 ggplot(final_sap, aes (x = date))+ 
   geom_line(aes(y = temp_diff), colour = "blue") +
@@ -195,7 +195,7 @@ ggplot(final_sap, aes (x = date))+
 
 ```
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 #driving route from smith to macleish
 # smith <- "Smith College, Northampton, MA 01063"
 # geocode(smith)
@@ -220,7 +220,7 @@ ggplot(final_sap, aes (x = date))+
 
 
 
-```{r}
+```{r, message = FALSE, warning = FALSE}
 # reading shapefile
 sugar_bush <- st_read("sugar_bush/SugarbushPoly20171013.shp") %>%
    st_transform(4326)
