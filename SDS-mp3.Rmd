@@ -21,6 +21,9 @@ library(RgoogleMaps)
 
 #Sugar Rush 
 aka Pour Some Sugar On Me by Def Leppard
+
+
+![](http://quarryhillfarmmaple.com/wp-content/uploads/2015/09/EGDPxujq6GHtWi0UH0NhDsgB_7Nqiw_4Bo7vxuHes_E.jpeg)
 <br>
 
 Maple syrup: New England runs on it. Anyone with a maple in their backyard knows that winter is the time to put a tap on the tree. But what circumstances generate the most maple sap? We talked to Reid Bertone-Johnson at the Macleish field station, to ask him about his experiences sugaring at Macleish. 
@@ -147,7 +150,6 @@ final_sap <- inner_join(daytime_sap_data, nighttime_sap_data) %>%
 
 final_sap <-inner_join(final_sap, sap)
 
-
 # Join the year, month, and day columns back into one date column
   
 final_sap$date <- paste0(final_sap$year, final_sap$month, final_sap$day)
@@ -171,9 +173,18 @@ data_sap <- function(year_arg) {
     ggplot(aes(x = date)) +
   geom_line(aes(y = temp_diff), colour = "blue") +
   geom_line(aes(y = sap), colour = "orange") +
-  labs(x = "Date", y = "Difference in Temperature") +
-  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield"))
+  labs(x = "Date", y = "Difference in Temperature", title = paste(which(c(years_sap) == year_arg), ". ",year_arg, sep=""), x = "", y = "") +
+    scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) 
+
 }
+
+#   + 
+#     geom_text(aes(x = 40, y = 200, label = "Maple Syrup Yeild"),  color = "orange") +
+#     geom_text(aes(x = 40, y = 150, label = "Tempreture Difference"), color = "blue")
+#   
+# } 
+  
+
 
 sap_graphs <- lapply(years_sap, data_sap)
 
@@ -185,18 +196,18 @@ gather =. split by variables
 
 
 ```{r, message = FALSE, warning = FALSE}
-#Plot the sap yield and the difference in temperature over time
-ggplot(final_sap, aes (x = date))+ 
-  geom_line(aes(y = temp_diff), colour = "blue") +
-  geom_line(aes(y = sap), colour = "orange") +
-  labs(x = "Date", y = "Difference in Temperature") +
-  scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) + facet_wrap(~ year)
+# #Plot the sap yield and the difference in temperature over time
+# ggplot(final_sap, aes (x = date))+ 
+#   geom_line(aes(y = temp_diff), colour = "blue") +
+#   geom_line(aes(y = sap), colour = "orange") +
+#   labs(x = "Date", y = "Difference in Temperature") +
+#   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) + facet_wrap(~ year)
 
 
 ```
 
 ```{r, message = FALSE, warning = FALSE}
-#driving route from smith to macleish
+# #driving route from smith to macleish
 # smith <- "Smith College, Northampton, MA 01063"
 # geocode(smith)
 # 
@@ -213,12 +224,12 @@ ggplot(final_sap, aes (x = date))+
 #                  to = "30, 78 Poplar Hill Rd, South Deerfield, MA 01373",
 #                  alternatives = TRUE, structure = "legs")
 # 
-# qmap("Smith College, Northampton, MA 01063", 
-#      zoom = 12, maptype = 'roadmap') + 
+# qmap("Smith College, Northampton, MA 01063",
+#      zoom = 12, maptype = 'roadmap') +
 #   geom_leg(aes(x = startLon, y = startLat, xend = endLon, yend = endLat, color = route), alpha = 0.7, size = 2, data = drive_df)
 ```
 
-
+#### 
 
 ```{r, message = FALSE, warning = FALSE}
 # reading shapefile
@@ -240,7 +251,36 @@ leaflet() %>%
   addPolylines(data = elevation_inside,  weight = 1, color = "blue") %>%
   addPolygons(data = sugar_bush_inside,  weight = 1, color ="red") %>%
   addPolygons(data = macleish_layers[["trails"]], 
-              weight = 2, color = "yellow", fillColor = "transparent")
+              weight = 2, color = "yellow", fillColor = "transparent") %>%
+  addMarkers(lng = -72.679737, lat = 42.453654, label = "North Sugar Bush", labelOptions = labelOptions(noHide = T)) %>% addMarkers(lng = -72.680573, lat= 42.4486, label = "South Sugar Bush", labelOptions = labelOptions(noHide = T))
   
 ```
+
+
+
+
+
+![](http://gph.is/1s4jt3j)
+
+
+
+
+
+
+- add caption 
+
+
+
+
+
+
+
+
+```{r}
+ggplot(data, aes(x = )) + geom_bar() + geom_line()
+```
+
+
+
+
 
