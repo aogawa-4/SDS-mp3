@@ -7,7 +7,7 @@ output:
     code_folding : hide
 ---
 
-```{r, message = FALSE, warning = FALSE}
+```{r, include = FALSE, message = FALSE, warning = FALSE}
 
 library(tidyverse)
 library(sf)
@@ -17,14 +17,17 @@ library(rgdal)
 library(lubridate)
 library(ggmap)
 library(RgoogleMaps)
+
 ```
 
 #Sugar Rush 
 aka Pour Some Sugar On Me by Def Leppard
 
-
+<br>
 ![](http://quarryhillfarmmaple.com/wp-content/uploads/2015/09/EGDPxujq6GHtWi0UH0NhDsgB_7Nqiw_4Bo7vxuHes_E.jpeg)
 <br>
+
+### An Investigation into Sugaring at Smith College Macleish Field Station
 
 Maple syrup: New England runs on it. Anyone with a maple in their backyard knows that winter is the time to put a tap on the tree. But what circumstances generate the most maple sap? We talked to Reid Bertone-Johnson at the Macleish field station, to ask him about his experiences sugaring at Macleish. 
 
@@ -36,10 +39,12 @@ When further asked about his experiences sugaring at Macleish, Bertone-Johnson w
 
 Smith College taps the southern Sugarbush location each year, using a process that involves hard manual labor and is very time consuming. Bertone-Johnson mentioned that many other sugaring locations use lines to feed their sap back to their tank location using gravity. We considered mapping out the Macleish sugarbush locations using elevation data to highlight the possibility of using lines to gravity feed sap back from the northern Sugarbush location to the bunker located adjacent to the southern Sugarbush location. In order to do this, we used spatial data from the `macleish` shapefile, which contains information about the man-made and natural structures surrounding the Macleish field station, in addition to data from the `sugarbush` shapefile, which outlines the Sugarbush locations at Macleish. 
 
+#### The Macleish Maples and Trails
+
 Below, we have mapped out the Macleish area with the maple forests highlighted in red, and forests that contain maples highlighted in yellow. We have also mapped out the Sugarbush locations with elevation markings.
 
 
-```{r, message = FALSE, warning = FALSE}
+```{r, include = FALSE, message = FALSE, warning = FALSE, echo=FALSE}
 # getting the table of maple syrup data and weather data from macleish
 
 macleish <- etl("macleish")
@@ -63,7 +68,7 @@ maple_sap <- data.frame(maple_sap)
 ```
 
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, echo=FALSE, include = FALSE}
 # Mappping the maple tree forests using leaflet
 maple_forest <- macleish_layers[["forests"]] %>% 
   filter(VegType_21 == "3")
@@ -71,7 +76,9 @@ maple_forest <- macleish_layers[["forests"]] %>%
 birch_maple_forest <- macleish_layers[["forests"]] %>% 
   filter(VegType_21 == "13" )
 
+```
 
+```{r, message = FALSE, warning = FALSE, echo = TRUE}
 leaflet() %>%
   addTiles() %>%
   addPolygons(data = maple_forest, color = "red") %>%
@@ -80,18 +87,44 @@ leaflet() %>%
               weight = 2, color = "blue", fillColor = "transparent")
 ```
 
+<br>
 
+#### Elevation at the Sugarbush Locations
+
+```{r, message = FALSE, warning = FALSE, echo= TRUE}
+# reading shapefile
+sugar_bush <- st_read("sugar_bush/SugarbushPoly20171013.shp") %>%
+   st_transform(4326)
+
+sugar_bush_inside <- macleish_layers[["boundary"]] %>%
+  st_intersection(sugar_bush)
+
+elevation <- st_read("contours250k/CONTOURS250K_ARC.shp")%>%
+   st_transform(4326)
+
+elevation_inside <- macleish_layers[["boundary"]] %>%
+  st_intersection(elevation)
+
+# Mapping the sugar bushes
+leaflet() %>%
+  addTiles() %>%
+  addPolylines(data = elevation_inside,  weight = 1, color = "blue") %>%
+  addPolygons(data = sugar_bush_inside,  weight = 1, color ="red") %>%
+  addPolygons(data = macleish_layers[["trails"]], 
+              weight = 2, color = "yellow", fillColor = "transparent") %>%
+  addMarkers(lng = -72.679737, lat = 42.453654, label = "North Sugar Bush", labelOptions = labelOptions(noHide = T)) %>% addMarkers(lng = -72.680573, lat= 42.4486, label = "South Sugar Bush", labelOptions = labelOptions(noHide = T))
+  
+```
 
 As can be observed above, the north Sugarbush location is at a higher elevation than the location of the southern Sugarbush bunker. This means that a system of lines using gravity to transport the sap to the bunker would be possible to plan, using slope and elevation to calculate a possible route. To implement this plan, Smith would have to invest in piping or lines to connect the two locations, which would be inexpensive and save the people sugaring at Macleish time and energy. Plastic lines for maple sugaring can be found online for under one dollar per foot. There should not be a major environmental impact, as the lines would not be interacting with the forest, and could be taken down when sugaring season was completed. While setting up the lines system would take a significant amount of time, it would reduce the time needed in the future to transfer the collected sap to the tank at the bunker. The only roadblocks foreseeable are the difficulty of computations necessary to create a system of lines that function using exclusively gravity as a transfer method.
 
 <br>
 
-### Sap Yield Predictions
-
+#### Sap Yield Predictions
 
 We also aimed to compare the difference in daytime temperature and nighttime temperature with the total sap collected on each day. According to Bertone-Johnson, an extreme difference between day and night temperature is the ideal condition to collect a high yield. The graph below shows a comparison between the difference in daytime and nighttime temperatures and sap yield for each day. The graphs have been faceted to create a graph for each year. This data supports Bertone-Johnson’s hypothesis that a greater yield comes from a higher temperature difference between day and night. By using weather predictions for the week, workers at Macleish would be able to predict the volume of the yield based on these graphs, and prepare for the week as necessary with materials and workers.
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, echo=FALSE}
 #Separating the date into year, month, and day for clarity
 #Filter out NA data for sap
 
@@ -107,7 +140,7 @@ f_weather <- weather_time %>%
 
 
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, echo=FALSE, null_prefix=TRUE}
 #Filter out irrelevant data (only temp and sap is needed)
 
 f_weather$wind_speed <- NULL
@@ -122,9 +155,12 @@ sap_weather <- inner_join(f_weather, sap)
 sap_weather$Comments <- NULL
 
 ```
+<br>
+
+In the graphs below, the orange line represents the maple sap yield, and the blue line represents the difference in temperature between day and night.
 
 
-```{r, message = FALSE, warning = FALSE}
+```{r, message = FALSE, warning = FALSE, echo = TRUE}
 #Get the average daytime and nighttime temperatures for each day
 
 daytime_sap_data <- sap_weather %>%
@@ -175,112 +211,18 @@ data_sap <- function(year_arg) {
   geom_line(aes(y = sap), colour = "orange") +
   labs(x = "Date", y = "Difference in Temperature", title = paste(which(c(years_sap) == year_arg), ". ",year_arg, sep=""), x = "", y = "") +
     scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) 
-
 }
-
-#   + 
-#     geom_text(aes(x = 40, y = 200, label = "Maple Syrup Yeild"),  color = "orange") +
-#     geom_text(aes(x = 40, y = 150, label = "Tempreture Difference"), color = "blue")
-#   
-# } 
-  
-
 
 sap_graphs <- lapply(years_sap, data_sap)
 
-# how to plot the data?
+
 sap_graphs
 ```
 
-gather =. split by variables 
 
 
-```{r, message = FALSE, warning = FALSE}
-# #Plot the sap yield and the difference in temperature over time
-# ggplot(final_sap, aes (x = date))+ 
-#   geom_line(aes(y = temp_diff), colour = "blue") +
-#   geom_line(aes(y = sap), colour = "orange") +
-#   labs(x = "Date", y = "Difference in Temperature") +
-#   scale_y_continuous(sec.axis = sec_axis(~.*5, name = "Sap Yield")) + facet_wrap(~ year)
+https://github.com/aogawa-4/SDS-mp3.git [^1]
 
-
-```
-
-```{r, message = FALSE, warning = FALSE}
-# #driving route from smith to macleish
-# smith <- "Smith College, Northampton, MA 01063"
-# geocode(smith)
-# 
-# Macleish <- "30, 78 Poplar Hill Rd, South Deerfield, MA 01373"
-# geocode(Macleish)
-# 
-# mapdist(from = smith, to = Macleish, mode = "driving")
-# 
-# smith_to_macleish <- route(smith, Macleish, alternatives = TRUE)
-# head(smith_to_macleish) %>%
-#   select(m, km, miles, miles, seconds, minutes, hours, startLon, startLat)
-# 
-# drive_df <- route(from = "Smith College, Northampton, MA 01063",
-#                  to = "30, 78 Poplar Hill Rd, South Deerfield, MA 01373",
-#                  alternatives = TRUE, structure = "legs")
-# 
-# qmap("Smith College, Northampton, MA 01063",
-#      zoom = 12, maptype = 'roadmap') +
-#   geom_leg(aes(x = startLon, y = startLat, xend = endLon, yend = endLat, color = route), alpha = 0.7, size = 2, data = drive_df)
-```
-
-#### 
-
-```{r, message = FALSE, warning = FALSE}
-# reading shapefile
-sugar_bush <- st_read("sugar_bush/SugarbushPoly20171013.shp") %>%
-   st_transform(4326)
-
-sugar_bush_inside <- macleish_layers[["boundary"]] %>%
-  st_intersection(sugar_bush)
-
-elevation <- st_read("contours250k/CONTOURS250K_ARC.shp")%>%
-   st_transform(4326)
-
-elevation_inside <- macleish_layers[["boundary"]] %>%
-  st_intersection(elevation)
-
-# Mapping the sugar bushes
-leaflet() %>%
-  addTiles() %>%
-  addPolylines(data = elevation_inside,  weight = 1, color = "blue") %>%
-  addPolygons(data = sugar_bush_inside,  weight = 1, color ="red") %>%
-  addPolygons(data = macleish_layers[["trails"]], 
-              weight = 2, color = "yellow", fillColor = "transparent") %>%
-  addMarkers(lng = -72.679737, lat = 42.453654, label = "North Sugar Bush", labelOptions = labelOptions(noHide = T)) %>% addMarkers(lng = -72.680573, lat= 42.4486, label = "South Sugar Bush", labelOptions = labelOptions(noHide = T))
-  
-```
-
-
-
-
-
-![](http://gph.is/1s4jt3j)
-
-
-
-
-
-
-- add caption 
-
-
-
-
-
-
-
-
-```{r}
-ggplot(data, aes(x = )) + geom_bar() + geom_line()
-```
-
-
-
+[^1]: Github link for our project
 
 
